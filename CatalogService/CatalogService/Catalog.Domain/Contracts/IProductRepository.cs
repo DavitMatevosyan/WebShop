@@ -2,4 +2,7 @@
 
 namespace Catalog.Domain.Contracts;
 
-internal interface IProductCategory : IBaseRepository<Product>;
+public interface IProductRepository : IBaseRepository<Product>
+{
+    Task<Product> GetProductWithCategoryAsync(Guid id);
+}

@@ -1,14 +1,89 @@
-﻿namespace Catalog.Domain.Entities;
+﻿using Catalog.Domain.DomainEvents;
+using Catalog.Domain.Exceptions;
+using Catalog.Domain.ValueObjects;
 
-//get/list/add/update/delete.
-public sealed class Product : BaseEntity
+namespace Catalog.Domain.Entities;
+
+public class Product(string productName, string? description, string? image, Guid categoryId, Money price, int amount)
+    : AggregateRoot
 {
-    public required string Name { get; set; } // max 50 chars
-    public string? Description { get; set; }
-    public string? Image { get; set; }
-    public Guid CategoryId { get; set; }
-    public required decimal Price { get; set; }
-    public required int Amount { get; set; } // > 0
+    public string Name { get; private set; } = productName;
+    public string? Description { get; private set; } = description;
+    public string? Image { get; private set; } = image;
+    public Guid CategoryId { get; private set; } = categoryId;
+    public Money Price { get; private set; } = price;
+    public int Amount { get; private set; } = amount;
 
-    public required Category Category { get; set; } // 1 product many categories
+    public Category Category { get; set; } = null!;
+
+    public void ChangeName(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            throw new DomainException("Product name cannot be empty");
+
+        if(name.Length > 50)
+            throw new DomainException("Product name cannot exceed 50 chars");
+            
+        if (Name == name) 
+            return;
+        
+        Name = name;
+        AddDomainEvent(new ProductNameChangedEvent(Id, name));
+    }
+    
+    public void ChangeDescription(string description)
+    {
+        if (Description == description) 
+            return;
+        
+        Description = description;
+        AddDomainEvent(new ProductDescriptionChangedEvent(Id, Description));
+    }
+    
+    public void ChangeImage(string image)
+    {
+        if (Image == image) 
+            return;
+        
+        Image = image;
+        AddDomainEvent(new ProductImageChangedEvent(Id, Image));
+    }
+    
+    public void ChangeCategoryId(Guid categoryId)
+    {
+        if (CategoryId == categoryId) 
+            return;
+        
+        CategoryId = categoryId;
+        AddDomainEvent(new ProductCategoryIdChangedEvent(Id, CategoryId));
+    }
+    
+    public void ChangePrice(decimal newPrice)
+    {
+        Price = new Money(newPrice);
+
+        AddDomainEvent(new ProductPriceChangedEvent(Id, Price));
+    }
+    
+    public void ChangeAmount(int amount)
+    {
+        if(amount < 0)
+            throw new DomainException("Amount cannot be negative");
+        
+        if (Amount == amount) 
+            return;
+        
+        Amount = amount;
+        AddDomainEvent(new ProductAmountChangedEvent(Id, Amount));
+    }
+
+    public void DeleteProduct()
+    {
+        if (IsDeleted)
+            throw new DomainException("Product is already deleted");
+
+        IsDeleted = true;
+        
+        AddDomainEvent(new ProductDeletedEvent(Id));
+    }
 }

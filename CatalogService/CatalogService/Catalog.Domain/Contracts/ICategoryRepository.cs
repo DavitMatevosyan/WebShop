@@ -2,4 +2,4 @@
 
 namespace Catalog.Domain.Contracts;
 
-internal interface ICategoryRepository : IBaseRepository<Category>;
+public interface ICategoryRepository : IBaseRepository<Category>;
