@@ -17,9 +17,14 @@ public class BaseRepository<T>(ApplicationDbContext dbContext) : IBaseRepository
         return await dbContext.Set<T>().FirstOrDefaultAsync(x => x.Id == id);
     }
 
-    public async Task<ICollection<T>> GetAsync(Expression<Func<T, bool>> predicate)
+    public async Task<ICollection<T>> GetAsync(Expression<Func<T, bool>> predicate, int pageNumber, int pageSize)
     {
-        return await dbContext.Set<T>().Where(predicate).ToListAsync();
+        return await dbContext
+            .Set<T>()
+            .Where(predicate)
+            .Skip(pageSize * (pageNumber - 1))
+            .Take(pageNumber)
+            .ToListAsync();
     }
 
     public Task UpdateAsync(T entity)

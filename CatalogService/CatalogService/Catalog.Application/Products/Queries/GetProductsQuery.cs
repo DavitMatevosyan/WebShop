@@ -8,7 +8,15 @@ using MediatR;
 
 namespace Catalog.Application.Products.Queries;
 
-public record GetProductsQuery(string? SearchText, decimal? MinPrice, decimal? MaxPrice, int? MinAmount, int? MaxAmount) : IRequest<ICollection<ProductDto>>;
+public record GetProductsQuery(
+    int PageNumber,
+    int PageSize,
+    string? SearchText = null, 
+    decimal? MinPrice = null, 
+    decimal? MaxPrice = null, 
+    int? MinAmount = null, 
+    int? MaxAmount = null,
+    Guid? CategoryId = null) : IRequest<ICollection<ProductDto>>;
 
 public class GetProductsQueryHandler(IProductRepository repository) : IRequestHandler<GetProductsQuery, ICollection<ProductDto>>
 {
@@ -30,8 +38,11 @@ public class GetProductsQueryHandler(IProductRepository repository) : IRequestHa
 
         if (request.MaxAmount is not null)
             predicate = predicate.And(product => product.Amount <= request.MaxAmount);
+        
+        if (request.CategoryId is not null)
+            predicate = predicate.And(product => product.CategoryId == request.CategoryId);
 
-        var result = await repository.GetAsync(predicate);
+        var result = await repository.GetAsync(predicate, request.PageNumber, request.PageSize);
 
         return result.Select(product => product.ToDto()).ToList();
     }

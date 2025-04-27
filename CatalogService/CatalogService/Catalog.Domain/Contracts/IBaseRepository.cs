@@ -23,8 +23,10 @@ public interface IBaseRepository<T> where T : BaseEntity
     /// Gets the list of entities filtered by the given predicate 
     /// </summary>
     /// <param name="predicate">the predicate to filter with</param>
+    /// <param name="pageNumber">the page of filtration</param>
+    /// <param name="pageSize">the number of entities in a single page</param>
     /// <returns></returns>
-    Task<ICollection<T>> GetAsync(Expression<Func<T, bool>> predicate);
+    Task<ICollection<T>> GetAsync(Expression<Func<T, bool>> predicate, int pageNumber, int pageSize);
     
     /// <summary>
     /// Updates an entity
