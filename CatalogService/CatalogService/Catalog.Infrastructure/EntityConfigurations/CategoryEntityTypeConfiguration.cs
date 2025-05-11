@@ -16,6 +16,7 @@ namespace Catalog.Infrastructure.EntityConfigurations;
                 .HasMaxLength(50);
 
             builder.HasMany(x => x.Products)
-                .WithOne(x => x.Category);
+                .WithOne(x => x.Category)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }

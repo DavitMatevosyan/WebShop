@@ -7,7 +7,7 @@ using MediatR;
 
 namespace Catalog.Application.Categories.Queries;
 
-public record GetCategoriesQuery(string? SearchText) : IRequest<ICollection<CategoryDto>>;
+public record GetCategoriesQuery(string? SearchText, int PageNumber, int PageSize) : IRequest<ICollection<CategoryDto>>;
 
 public class GetCategoriesQueryHandler(ICategoryRepository repository) : IRequestHandler<GetCategoriesQuery, ICollection<CategoryDto>>
 {
@@ -18,7 +18,7 @@ public class GetCategoriesQueryHandler(ICategoryRepository repository) : IReques
         if (request.SearchText is not null)
             predicate = predicate.And(product => product.Name.Contains(request.SearchText));
         
-        var result = await repository.GetAsync(predicate);
+        var result = await repository.GetAsync(predicate, request.PageNumber, request.PageSize);
 
         return result.Select(category => category.ToDto()).ToList();
     }
