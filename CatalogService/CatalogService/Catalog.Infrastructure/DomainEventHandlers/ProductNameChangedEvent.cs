@@ -1,14 +1,18 @@
 using Catalog.Domain.DomainEvents;
+using Catalog.Infrastructure.Services;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
 namespace Catalog.Infrastructure.DomainEventHandlers;
 
-public class ProductNameChangedEventHandler(ILogger<ProductNameChangedEventHandler> logger) : INotificationHandler<ProductNameChangedEvent>
+public class ProductNameChangedEventHandler(
+    RabbitMqService rabbitMqService,
+    ILogger<ProductNameChangedEventHandler> logger) : INotificationHandler<ProductNameChangedEvent>
 {
-    public Task Handle(ProductNameChangedEvent notification, CancellationToken cancellationToken)
+    public async Task Handle(ProductNameChangedEvent notification, CancellationToken cancellationToken)
     {
         logger.LogInformation($"Product name changed: Id = {notification.Id}, New Name = {notification.Name}");
-        return Task.CompletedTask;
+        
+        await rabbitMqService.Publish(Constants.ExchangeNames.DomainEventExchange, notification, cancellationToken);
     }
 }

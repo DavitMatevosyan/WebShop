@@ -16,6 +16,8 @@ public class DeleteProductCommandHandler(IProductRepository productRepository) :
         product.DeleteProduct();
 
         await productRepository.UpdateAsync(product);
+
+        await productRepository.SaveChangesAsync();
         
         return product.Id;
     }

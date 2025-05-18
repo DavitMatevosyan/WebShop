@@ -5,10 +5,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Catalog.Infrastructure;
 
-public class ApplicationDbContext(IDomainEventDispatcher domainEventDispatcher) : DbContext
+public class ApplicationDbContext(DbContextOptions options, IDomainEventDispatcher domainEventDispatcher) : Microsoft.EntityFrameworkCore.DbContext(options)
 {
     public DbSet<Product> Products { get; set; }
     public DbSet<Category> Categories { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        base.OnConfiguring(optionsBuilder);
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

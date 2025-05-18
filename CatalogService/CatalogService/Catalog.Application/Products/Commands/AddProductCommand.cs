@@ -33,6 +33,8 @@ public class AddProductCommandHandler(IProductRepository productRepository, ICat
             request.Amount);
 
         await productRepository.AddAsync(product);
+        
+        await productRepository.SaveChangesAsync();
 
         return product.Id;
     }

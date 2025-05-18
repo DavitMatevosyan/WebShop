@@ -23,6 +23,8 @@ public class AddCategoryCommandHandler(ICategoryRepository repository) : IReques
 
         await repository.AddAsync(category);
 
+        await repository.SaveChangesAsync();
+
         return category.Id;
     }
 }
