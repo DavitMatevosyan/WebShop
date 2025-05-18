@@ -1,0 +1,17 @@
+version: '3.8'
+
+# in the future when we dockerize the Cart and Catalog Services, the configuration will be added here.
+# any setups required or modified also will be added in here.
+# no manual creation of topics or exchanges (from code) will be done.
+
+services:
+  rabbitmq:
+    image: rabbitmq:4-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"     # AMQP protocol
+      - "15672:15672"   # Management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: davit
+      RABBITMQ_DEFAULT_PASS: davit
+    hostname: rabbit

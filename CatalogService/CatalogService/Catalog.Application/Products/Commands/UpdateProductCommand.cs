@@ -44,6 +44,7 @@ public class UpdateProductCommandHandler(IProductRepository productRepository, I
         if(request.Amount is not null)
             existingProduct.ChangeAmount(request.Amount.Value);
         
+        await  productRepository.SaveChangesAsync();
         return existingProduct.Id;
     }
 }

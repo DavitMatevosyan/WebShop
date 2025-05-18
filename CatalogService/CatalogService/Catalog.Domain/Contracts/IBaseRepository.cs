@@ -17,7 +17,7 @@ public interface IBaseRepository<T> where T : BaseEntity
     /// </summary>
     /// <param name="id">the id of the entity</param>
     /// <returns></returns>
-    Task<T> GetAsync(Guid id);
+    Task<T?> GetAsync(Guid id);
     
     /// <summary>
     /// Gets the list of entities filtered by the given predicate 
@@ -41,4 +41,10 @@ public interface IBaseRepository<T> where T : BaseEntity
     /// <param name="id">the entity to delete</param>
     /// <returns></returns>
     Task DeleteAsync(Guid id);
+
+    /// <summary>
+    /// Persists changes to the db
+    /// </summary>
+    /// <returns></returns>
+    Task<int> SaveChangesAsync();
 }
