@@ -13,10 +13,10 @@ public class UpdateCategoryCommandHandler(ICategoryRepository repository) : IReq
         var existingCategory = await repository.GetAsync(request.Id) 
                        ?? throw new NotFoundException("Category not found");
     
-        if(request.Name is not null)
+        if (request.Name is not null)
             existingCategory.ChangeName(request.Name);
 
-        if(request.Image is not null)
+        if (request.Image is not null)
             existingCategory.ChangeImage(request.Image);
 
         if (request.ParentCategoryId is not null)
@@ -26,6 +26,8 @@ public class UpdateCategoryCommandHandler(ICategoryRepository repository) : IReq
 
             existingCategory.ChangeParentCategoryId(category.Id);
         }
+
+        await repository.SaveChangesAsync();
         
         return existingCategory.Id;
     }

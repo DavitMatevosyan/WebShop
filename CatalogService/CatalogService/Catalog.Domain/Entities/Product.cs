@@ -4,10 +4,10 @@ using Catalog.Domain.ValueObjects;
 
 namespace Catalog.Domain.Entities;
 
-public class Product(string productName, string? description, string? image, Guid categoryId, Money price, int amount)
+public class Product(string name, string? description, string? image, Guid categoryId, Money price, int amount)
     : AggregateRoot
 {
-    public string Name { get; private set; } = productName;
+    public string Name { get; private set; } = name;
     public string? Description { get; private set; } = description;
     public string? Image { get; private set; } = image;
     public Guid CategoryId { get; private set; } = categoryId;

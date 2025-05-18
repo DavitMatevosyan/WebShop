@@ -4,9 +4,7 @@ using MediatR;
 
 namespace Catalog.Api.Endpoints.Category;
 
-public record AddCategoryResponse(Guid Id, string Name, string? Image, Guid? ParentCategoryId);
-
-public class AddCategoryEndpoint(Mediator mediator) : BaseEndpoint(mediator)
+public class AddCategoryEndpoint(IMediator mediator) : BaseEndpoint(mediator)
 {
     public async Task<IResult> HandleAsync(AddCategoryDto categoryDto)
     {
@@ -22,3 +20,5 @@ public class AddCategoryEndpoint(Mediator mediator) : BaseEndpoint(mediator)
         return Results.Ok(dto);
     }
 }
+
+public record AddCategoryResponse(Guid Id, string Name, string? Image, Guid? ParentCategoryId);

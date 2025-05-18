@@ -2,7 +2,7 @@ using MediatR;
 
 namespace Catalog.Api.Endpoints;
 
-public abstract class BaseEndpoint(Mediator mediator)
+public abstract class BaseEndpoint(IMediator mediator)
 {
-    protected readonly Mediator Mediator = mediator;
+    protected readonly IMediator Mediator = mediator;
 }

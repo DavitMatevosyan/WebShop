@@ -4,16 +4,7 @@ using MediatR;
 
 namespace Catalog.Api.Endpoints.Product;
 
-public record UpdateProductResult(
-    Guid Id,
-    string? Name = null, 
-    string? Description = null,
-    string? Image = null,
-    Guid? CategoryId = null,
-    decimal? Price = null,
-    int? Amount = null);
-
-public class UpdateProductEndpoint(Mediator mediator) : BaseEndpoint(mediator)
+public class UpdateProductEndpoint(IMediator mediator) : BaseEndpoint(mediator)
 {
     public async Task<IResult> HandleAsync(UpdateProductDto dto)
     {
@@ -43,3 +34,12 @@ public class UpdateProductEndpoint(Mediator mediator) : BaseEndpoint(mediator)
         return Results.Ok(responseDto);
     }
 }
+
+public record UpdateProductResult(
+    Guid Id,
+    string? Name = null, 
+    string? Description = null,
+    string? Image = null,
+    Guid? CategoryId = null,
+    decimal? Price = null,
+    int? Amount = null);

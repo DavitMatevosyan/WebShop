@@ -4,20 +4,20 @@ using MediatR;
 
 namespace Catalog.Infrastructure.Events;
 
-    public class DomainEventDispatcher(IMediator mediator) : IDomainEventDispatcher
+public class DomainEventDispatcher(IMediator mediator) : IDomainEventDispatcher
+{
+    public async Task DispatchEventAsync(IEnumerable<AggregateRoot> entities)
     {
-        public async Task DispatchEventAsync(IEnumerable<AggregateRoot> entities)
+        foreach (var entity in entities)
         {
-            foreach (var entity in entities)
-            {
-                var events = entity.DomainEvents.ToList();
-                
-                entity.ClearDomainEvents();
+            var events = entity.DomainEvents.ToList();
+            
+            entity.ClearDomainEvents();
 
-                foreach (var domainEvent in events)
-                {
-                    await mediator.Publish(domainEvent);
-                }
+            foreach (var domainEvent in events)
+            {
+                await mediator.Publish(domainEvent);
             }
         }
     }
+}
