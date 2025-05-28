@@ -1,7 +1,7 @@
 using Catalog.Domain.Contracts;
 using Catalog.Domain.Entities;
-using System.Data.Entity;
 using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 
 namespace Catalog.Infrastructure.Repositories;
 
@@ -12,7 +12,7 @@ public class BaseRepository<T>(ApplicationDbContext dbContext) : IBaseRepository
         await dbContext.Set<T>().AddAsync(entity);
     }
 
-    public async Task<T> GetAsync(Guid id)
+    public async Task<T?> GetAsync(Guid id)
     {
         return await dbContext.Set<T>().FirstOrDefaultAsync(x => x.Id == id);
     }
@@ -38,6 +38,12 @@ public class BaseRepository<T>(ApplicationDbContext dbContext) : IBaseRepository
     {
         var entity = await GetAsync(id);
 
-        dbContext.Set<T>().Remove(entity);
+        if(entity != null)
+            dbContext.Set<T>().Remove(entity);
+    }
+
+    public async Task<int> SaveChangesAsync()
+    {
+        return await dbContext.SaveChangesAsync();
     }
 }

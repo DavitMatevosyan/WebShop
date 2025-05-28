@@ -5,6 +5,6 @@ public record UpdateProductDto(
     string Name, 
     string? Description, 
     string? Image, 
-    Guid CategoryId, 
-    decimal Price, 
-    int Amount);
+    Guid? CategoryId, 
+    decimal? Price, 
+    int? Amount);

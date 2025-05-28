@@ -16,7 +16,9 @@ public class DeleteCategoryCommandHandler(ICategoryRepository repository) : IReq
         category.DeleteCategory();
 
         await repository.UpdateAsync(category);
-        
+
+        await repository.SaveChangesAsync();
+
         return category.Id;
     }
 }

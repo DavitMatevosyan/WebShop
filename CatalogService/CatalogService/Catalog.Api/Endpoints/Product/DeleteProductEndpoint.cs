@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Catalog.Api.Endpoints.Product;
 
-public class DeleteProductEndpoint(Mediator mediator) : BaseEndpoint(mediator)
+public class DeleteProductEndpoint(IMediator mediator) : BaseEndpoint(mediator)
 {
     public async Task<IResult> HandleAsync(Guid id)
     {

@@ -6,7 +6,7 @@ namespace Catalog.Api.Endpoints.Category;
 
 public record UpdateCategoryResult(Guid Id, string? Name, string? Image, Guid? ParentCategoryId);
 
-public class UpdateCategoryEndpoint(Mediator mediator) : BaseEndpoint(mediator)
+public class UpdateCategoryEndpoint(IMediator mediator) : BaseEndpoint(mediator)
 {
     public async Task<IResult> HandleAsync(UpdateCategoryDto dto)
     {

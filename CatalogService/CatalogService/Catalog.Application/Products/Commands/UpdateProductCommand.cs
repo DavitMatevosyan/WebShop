@@ -30,7 +30,7 @@ public class UpdateProductCommandHandler(IProductRepository productRepository, I
         if(request.Image is not null)
             existingProduct.ChangeImage(request.Image);
 
-        if (request.CategoryId is not null)
+        if (request.CategoryId != null && request.CategoryId != Guid.Empty)
         {
             var category = await categoryRepository.GetAsync(request.CategoryId.Value)
                            ?? throw new NotFoundException("Category not found");
@@ -44,6 +44,7 @@ public class UpdateProductCommandHandler(IProductRepository productRepository, I
         if(request.Amount is not null)
             existingProduct.ChangeAmount(request.Amount.Value);
         
+        await  productRepository.SaveChangesAsync();
         return existingProduct.Id;
     }
 }
