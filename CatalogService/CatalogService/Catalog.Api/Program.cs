@@ -1,3 +1,5 @@
+using System.Security.Claims;
+using System.Text.Json;
 using Catalog.Api.Endpoints;
 using Catalog.Api.Extensions;
 using Catalog.Api.HostedServices;
@@ -9,11 +11,14 @@ using Catalog.Application.Products.Queries;
 using Catalog.Domain.DomainEvents;
 using Catalog.Infrastructure;
 using Catalog.Infrastructure.Configuration;
+using Catalog.Infrastructure.Constants;
 using Catalog.Infrastructure.DomainEventHandlers;
 using Catalog.Infrastructure.Events;
 using Catalog.Infrastructure.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +26,49 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.Authority = builder.Configuration["Authorization:Authority"];
+        options.Audience = builder.Configuration["Authorization:Audience"];
+        options.RequireHttpsMetadata = false;
+
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true
+        };
+        
+        options.Events = new JwtBearerEvents
+        {
+            OnTokenValidated = context =>
+            {
+                var claimsIdentity = context.Principal!.Identity as ClaimsIdentity;
+                var realmAccess = context.Principal.FindFirst("realm_access");
+
+                if (realmAccess == null) 
+                    return Task.CompletedTask;
+                
+                var parsedRoles = JsonDocument.Parse(realmAccess.Value);
+                
+                if (!parsedRoles.RootElement.TryGetProperty("roles", out var roles)) 
+                    return Task.CompletedTask;
+                
+                foreach (var role in roles.EnumerateArray())
+                {
+                    claimsIdentity!.AddClaim(new Claim(ClaimTypes.Role, role.GetString()!));
+                }
+
+                return Task.CompletedTask;
+            }
+        };
+    });
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Authorized", policy => 
+        policy.RequireRole(UserRoles.Manager, UserRoles.StoreCustomer));
+});
 
 builder.Services.AddMediatR(config =>
 {
@@ -65,8 +113,8 @@ var app = builder.Build();
 var rabbitMq = new RabbitMqInitializer(app.Services.GetRequiredService<RabbitMqService>());
 await rabbitMq.StartAsync(CancellationToken.None);
 
-
-
+app.UseAuthentication();
+app.UseAuthorization();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
