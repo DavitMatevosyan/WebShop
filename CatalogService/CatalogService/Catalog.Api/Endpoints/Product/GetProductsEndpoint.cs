@@ -12,7 +12,7 @@ public class GetProductsEndpoint(IMediator mediator) : BaseEndpoint(mediator)
             page,
             pageSize,
             CategoryId: categoryId);
-        
+
         var result = await Mediator.Send(query);
 
         return !result.Any() ? Results.NotFound() : Results.Ok(result);

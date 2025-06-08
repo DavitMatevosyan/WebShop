@@ -1,4 +1,4 @@
-﻿using Catalog.Domain.DomainEvents;
+using Catalog.Domain.DomainEvents;
 using Catalog.Domain.Exceptions;
 using Catalog.Domain.ValueObjects;
 
@@ -21,58 +21,58 @@ public class Product(string name, string? description, string? image, Guid categ
         if (string.IsNullOrWhiteSpace(name))
             throw new DomainException("Product name cannot be empty");
 
-        if(name.Length > 50)
+        if (name.Length > 50)
             throw new DomainException("Product name cannot exceed 50 chars");
-            
-        if (Name == name) 
+
+        if (Name == name)
             return;
-        
+
         Name = name;
         AddDomainEvent(new ProductNameChangedEvent(Id, name));
     }
-    
+
     public void ChangeDescription(string description)
     {
-        if (Description == description) 
+        if (Description == description)
             return;
-        
+
         Description = description;
         AddDomainEvent(new ProductDescriptionChangedEvent(Id, Description));
     }
-    
+
     public void ChangeImage(string image)
     {
-        if (Image == image) 
+        if (Image == image)
             return;
-        
+
         Image = image;
         AddDomainEvent(new ProductImageChangedEvent(Id, Image));
     }
-    
+
     public void ChangeCategoryId(Guid categoryId)
     {
-        if (CategoryId == categoryId) 
+        if (CategoryId == categoryId)
             return;
-        
+
         CategoryId = categoryId;
         AddDomainEvent(new ProductCategoryIdChangedEvent(Id, CategoryId));
     }
-    
+
     public void ChangePrice(decimal newPrice)
     {
         Price = new Money(newPrice);
 
         AddDomainEvent(new ProductPriceChangedEvent(Id, Price));
     }
-    
+
     public void ChangeAmount(int amount)
     {
-        if(amount < 0)
+        if (amount < 0)
             throw new DomainException("Amount cannot be negative");
-        
-        if (Amount == amount) 
+
+        if (Amount == amount)
             return;
-        
+
         Amount = amount;
         AddDomainEvent(new ProductAmountChangedEvent(Id, Amount));
     }
@@ -83,7 +83,7 @@ public class Product(string name, string? description, string? image, Guid categ
             throw new DomainException("Product is already deleted");
 
         IsDeleted = true;
-        
+
         AddDomainEvent(new ProductDeletedEvent(Id));
     }
 }

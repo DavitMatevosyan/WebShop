@@ -13,7 +13,7 @@ public class ProductRepository(ApplicationDbContext dbContext) : BaseRepository<
         var product = await _dbContext.Products.Where(pr => pr.Id == id)
             .Include(pr => pr.Category)
             .FirstOrDefaultAsync();
-        
+
         return product;
     }
 }

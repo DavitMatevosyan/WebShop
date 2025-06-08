@@ -1,13 +1,13 @@
+using Catalog.Application.Exceptions;
 using Catalog.Domain.Contracts;
 using Catalog.Domain.Entities;
-using Catalog.Domain.Exceptions;
 using Catalog.Domain.ValueObjects;
 using MediatR;
 
 namespace Catalog.Application.Products.Commands;
 
-public record AddProductCommand (
-    string Name, 
+public record AddProductCommand(
+    string Name,
     string Description,
     string Image,
     Guid CategoryId,
@@ -23,19 +23,24 @@ public class AddProductCommandHandler(IProductRepository productRepository, ICat
                        ?? throw new NotFoundException("Category not found");
 
         var price = new Money(request.Price);
-        
+
+        int x = 12;
+
         var product = new Product(
-            request.Name, 
-            request.Description, 
-            request.Image, 
-            request.CategoryId, 
-            price, 
+            request.Name,
+            request.Description,
+            request.Image,
+            category.Id,
+            price,
             request.Amount);
 
         await productRepository.AddAsync(product);
-        
-        await productRepository.SaveChangesAsync();
 
+        await productRepository.SaveChangesAsync();
+        if (x == 10)
+        {
+
+        }
         return product.Id;
     }
 }

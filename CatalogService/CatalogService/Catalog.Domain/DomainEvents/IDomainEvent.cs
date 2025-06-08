@@ -5,7 +5,7 @@ namespace Catalog.Domain.DomainEvents;
 
 public interface IDomainEvent : INotification;
 
-public record DomainEvent: IDomainEvent
+public record DomainEvent : IDomainEvent
 {
     public string EventType => GetType().Name;
 }
@@ -24,4 +24,3 @@ public record CategoryNameChangedEvent(Guid Id, string Name) : IDomainEvent;
 public record CategoryImageChangedEvent(Guid Id, string Image) : IDomainEvent;
 public record ParentCategoryIdChangedEvent(Guid Id, Guid ParentCategoryId) : IDomainEvent;
 public record CategoryDeletedEvent(Guid Id) : IDomainEvent;
-

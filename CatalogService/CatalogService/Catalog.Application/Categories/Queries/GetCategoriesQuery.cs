@@ -17,7 +17,7 @@ public class GetCategoriesQueryHandler(ICategoryRepository repository) : IReques
 
         if (request.SearchText is not null)
             predicate = predicate.And(product => product.Name.Contains(request.SearchText));
-        
+
         var result = await repository.GetAsync(predicate, request.PageNumber, request.PageSize);
 
         return result.Select(category => category.ToDto()).ToList();

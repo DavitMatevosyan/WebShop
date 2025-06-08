@@ -8,10 +8,10 @@ public class DeleteCategoryEndpoint(IMediator mediator) : BaseEndpoint(mediator)
     public async Task<IResult> HandleAsync(Guid id)
     {
         var request = new DeleteCategoryCommand(id);
-        
+
         var result = await Mediator.Send(request);
-        
-        return result == default ? Results.Problem("Category failed to delete") 
+
+        return result == Guid.Empty ? Results.Problem("Category failed to delete")
                                  : Results.Redirect("/", true);
     }
 }

@@ -1,5 +1,5 @@
+using Catalog.Application.Exceptions;
 using Catalog.Domain.Contracts;
-using Catalog.Domain.Exceptions;
 using MediatR;
 
 namespace Catalog.Application.Products.Commands;
@@ -18,7 +18,7 @@ public class DeleteProductCommandHandler(IProductRepository productRepository) :
         await productRepository.UpdateAsync(product);
 
         await productRepository.SaveChangesAsync();
-        
+
         return product.Id;
     }
 }

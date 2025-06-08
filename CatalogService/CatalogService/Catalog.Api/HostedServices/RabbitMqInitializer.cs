@@ -4,16 +4,16 @@ namespace Catalog.Api.HostedServices;
 
 public class RabbitMqInitializer : IHostedService
 {
-    private readonly RabbitMqService rabbitMqService;
+    private readonly RabbitMqService _rabbitMqService;
 
     public RabbitMqInitializer(RabbitMqService rabbitMqService)
     {
-        this.rabbitMqService = rabbitMqService;
+        _rabbitMqService = rabbitMqService;
     }
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        await rabbitMqService.InitializeAsync();
+        await _rabbitMqService.InitializeAsync();
     }
 
     public Task StopAsync(CancellationToken cancellationToken)

@@ -15,17 +15,17 @@ public class AddProductEndpoint(IMediator mediator) : BaseEndpoint(mediator)
             categoryDto.CategoryId,
             categoryDto.Price,
             categoryDto.Amount);
-        
+
         var result = await Mediator.Send(command);
-        
-        if(result == Guid.Empty)
+
+        if (result == Guid.Empty)
             return Results.Problem("Product failed to add", statusCode: 400);
-        
+
         var dto = new AddProductResponse(
-            result, 
+            result,
             command.Name,
             command.Description,
-            command.Image, 
+            command.Image,
             command.CategoryId,
             command.Price,
             command.Amount);
@@ -35,8 +35,8 @@ public class AddProductEndpoint(IMediator mediator) : BaseEndpoint(mediator)
 }
 
 public record AddProductResponse(
-    Guid Id, 
-    string Name, 
+    Guid Id,
+    string Name,
     string Description,
     string Image,
     Guid CategoryId,

@@ -1,7 +1,7 @@
+using Catalog.Application.Exceptions;
 using Catalog.Application.Extensions.Mappers;
 using Catalog.Application.Products.Dtos;
 using Catalog.Domain.Contracts;
-using Catalog.Domain.Exceptions;
 using MediatR;
 
 namespace Catalog.Application.Products.Queries;

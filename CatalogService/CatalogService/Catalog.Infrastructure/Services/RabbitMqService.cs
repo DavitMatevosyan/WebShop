@@ -24,20 +24,20 @@ public class RabbitMqService : INotificationPublisher, IAsyncDisposable
             Password = "password"
         };
     }
-    
+
     public async Task InitializeAsync()
     {
         connection = await factory.CreateConnectionAsync();
         channel = await connection.CreateChannelAsync();
         await EnsureConfiguration();
     }
-    
+
     public async Task Publish<T>(string exchange, T message, CancellationToken cancellationToken = default)
     {
         if (channel == null)
             throw new NullReferenceException("Channel is null");
-        
-        var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(message));
+
+        byte[] body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(message));
 
         await channel.BasicPublishAsync(
             exchange: exchange,
@@ -57,8 +57,8 @@ public class RabbitMqService : INotificationPublisher, IAsyncDisposable
                 type: ExchangeType.Direct,
                 durable: true,
                 autoDelete: false);
-            
-            foreach (var queue in configuration.Queues)
+
+            foreach (string queue in configuration.Queues)
             {
                 await channel.QueueDeclareAsync(
                     queue: queue,
@@ -74,12 +74,12 @@ public class RabbitMqService : INotificationPublisher, IAsyncDisposable
             }
         }
     }
-    
+
     public async ValueTask DisposeAsync()
     {
         if (connection != null)
             await connection.DisposeAsync();
-    
+
         if (channel != null)
             await channel.DisposeAsync();
     }

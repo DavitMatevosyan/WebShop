@@ -12,7 +12,7 @@ public class ProductNameChangedEventHandler(
     public async Task Handle(ProductNameChangedEvent notification, CancellationToken cancellationToken)
     {
         logger.LogInformation($"Product name changed: Id = {notification.Id}, New Name = {notification.Name}");
-        
+
         await rabbitMqService.Publish(Constants.ExchangeNames.DomainEventExchange, notification, cancellationToken);
     }
 }

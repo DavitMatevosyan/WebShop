@@ -5,11 +5,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Catalog.Infrastructure;
 
-public class ApplicationDbContext(DbContextOptions options, IDomainEventDispatcher domainEventDispatcher) : Microsoft.EntityFrameworkCore.DbContext(options)
+public class ApplicationDbContext(DbContextOptions options, IDomainEventDispatcher domainEventDispatcher) : DbContext(options)
 {
     public DbSet<Product> Products { get; set; }
     public DbSet<Category> Categories { get; set; }
 
+    // ReSharper disable once RedundantOverriddenMember 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         base.OnConfiguring(optionsBuilder);
@@ -30,7 +31,7 @@ public class ApplicationDbContext(DbContextOptions options, IDomainEventDispatch
             .ToList();
 
         await domainEventDispatcher.DispatchEventAsync(domainEntities);
-        
+
         return await base.SaveChangesAsync(cancellationToken);
     }
 }

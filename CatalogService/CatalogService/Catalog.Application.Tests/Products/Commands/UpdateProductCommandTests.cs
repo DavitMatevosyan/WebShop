@@ -12,16 +12,16 @@ public class UpdateProductCommandTests
     private readonly Mock<IProductRepository> _productRepositoryMock;
     private readonly Mock<ICategoryRepository> _categoryRepositoryMock;
     private readonly UpdateProductCommandHandler _handler;
-    
+
     private readonly Guid existingCategoryId = Guid.NewGuid();
-    
+
     public UpdateProductCommandTests()
     {
         _productRepositoryMock = new Mock<IProductRepository>();
         _categoryRepositoryMock = new Mock<ICategoryRepository>();
         _handler = new UpdateProductCommandHandler(_productRepositoryMock.Object, _categoryRepositoryMock.Object);
     }
-    
+
     // similar to this add other cases
     [Fact]
     public async Task Handle_WithValidProduct_ShouldUpdateProduct()
@@ -33,15 +33,15 @@ public class UpdateProductCommandTests
         var product = new Product(
             "Name",
             null,
-            null, 
+            null,
             existingCategoryId,
             new Money(10),
             5);
         var productId = product.Id;
-        
+
         _productRepositoryMock.Setup(repo => repo.GetAsync(productId))
             .ReturnsAsync(product);
-        
+
         var command = new UpdateProductCommand(
             Id: productId,
             Name: "Updated Name");
@@ -51,9 +51,9 @@ public class UpdateProductCommandTests
 
         // Assert
         result.Should().NotBe(Guid.Empty);
-        
+
         product.Name.Should().Be("Updated Name");
-        
+
         _categoryRepositoryMock.VerifyNoOtherCalls();
     }
 }

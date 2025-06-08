@@ -13,8 +13,8 @@ public static class ServiceExtensions
                    .AddScoped<GetCategoryEndpoint>()
                    .AddScoped<UpdateCategoryEndpoint>()
                    .AddScoped<DeleteCategoryEndpoint>();
-    
-    
+
+
     public static IServiceCollection AddProductServices(this IServiceCollection services)
         => services.AddScoped<GetProductsEndpoint>()
                    .AddScoped<AddProductEndpoint>()
@@ -25,6 +25,4 @@ public static class ServiceExtensions
     public static IServiceCollection AddRepositoryServices(this IServiceCollection services)
         => services.AddScoped<ICategoryRepository, CategoryRepository>()
                    .AddScoped<IProductRepository, ProductRepository>();
-
-
 }

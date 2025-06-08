@@ -9,15 +9,15 @@ public class MoneyTests
     [Fact]
     public void Constructor_PositiveValue_ShouldCreate()
     {
-        Money money = new Money(50);
-        
+        var money = new Money(50);
+
         Assert.Equal(50, money.Value);
     }
-    
+
     [Fact]
     public void Constructor_NegativeValue_ShouldCreate()
     {
-        var act = () => new Money(-50);
+        Func<Money> act = () => new Money(-50);
 
         act.Should().Throw<DomainException>();
     }

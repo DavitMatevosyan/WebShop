@@ -1,3 +1,4 @@
+using Catalog.Application.Exceptions;
 using Catalog.Domain.Contracts;
 using Catalog.Domain.Exceptions;
 using MediatR;

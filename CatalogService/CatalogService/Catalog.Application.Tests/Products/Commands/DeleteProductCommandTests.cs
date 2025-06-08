@@ -17,7 +17,7 @@ public class DeleteProductCommandTests
         _productRepositoryMock = new Mock<IProductRepository>();
         _handler = new DeleteProductCommandHandler(_productRepositoryMock.Object);
     }
-    
+
     // and for failure cases
     [Fact]
     public async Task Handle_ExistingProduct_ShouldDelete()

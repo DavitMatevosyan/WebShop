@@ -38,7 +38,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         {
             ValidateIssuerSigningKey = true
         };
-        
+
         options.Events = new JwtBearerEvents
         {
             OnTokenValidated = context =>
@@ -46,18 +46,16 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 var claimsIdentity = context.Principal!.Identity as ClaimsIdentity;
                 var realmAccess = context.Principal.FindFirst("realm_access");
 
-                if (realmAccess == null) 
+                if (realmAccess == null)
                     return Task.CompletedTask;
-                
+
                 var parsedRoles = JsonDocument.Parse(realmAccess.Value);
-                
-                if (!parsedRoles.RootElement.TryGetProperty("roles", out var roles)) 
+
+                if (!parsedRoles.RootElement.TryGetProperty("roles", out var roles))
                     return Task.CompletedTask;
-                
+
                 foreach (var role in roles.EnumerateArray())
-                {
                     claimsIdentity!.AddClaim(new Claim(ClaimTypes.Role, role.GetString()!));
-                }
 
                 return Task.CompletedTask;
             }
@@ -66,7 +64,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("Authorized", policy => 
+    options.AddPolicy("Authorized", policy =>
         policy.RequireRole(UserRoles.Manager, UserRoles.StoreCustomer));
 });
 
@@ -125,7 +123,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-    app.MapGroup("/api/Categories").MapCategoriesEndpoints(builder.Configuration);
-    app.MapGroup("/api/Products").MapProductsEndpoints(builder.Configuration); 
+app.MapGroup("/api/Categories").MapCategoriesEndpoints(builder.Configuration);
+app.MapGroup("/api/Products").MapProductsEndpoints(builder.Configuration);
 
 app.Run();

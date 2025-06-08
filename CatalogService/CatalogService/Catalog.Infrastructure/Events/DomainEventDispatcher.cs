@@ -11,7 +11,7 @@ public class DomainEventDispatcher(IMediator mediator) : IDomainEventDispatcher
         foreach (var entity in entities)
         {
             var events = entity.DomainEvents.ToList();
-            
+
             entity.ClearDomainEvents();
 
             foreach (var domainEvent in events)

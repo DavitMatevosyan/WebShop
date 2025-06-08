@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using Catalog.Application.Extensions.Mappers;
 using Catalog.Application.Products.Dtos;
 using Catalog.Domain.Contracts;
@@ -11,10 +10,10 @@ namespace Catalog.Application.Products.Queries;
 public record GetProductsQuery(
     int PageNumber,
     int PageSize,
-    string? SearchText = null, 
-    decimal? MinPrice = null, 
-    decimal? MaxPrice = null, 
-    int? MinAmount = null, 
+    string? SearchText = null,
+    decimal? MinPrice = null,
+    decimal? MaxPrice = null,
+    int? MinAmount = null,
     int? MaxAmount = null,
     Guid? CategoryId = null) : IRequest<ICollection<ProductDto>>;
 
@@ -38,7 +37,7 @@ public class GetProductsQueryHandler(IProductRepository repository) : IRequestHa
 
         if (request.MaxAmount is not null)
             predicate = predicate.And(product => product.Amount <= request.MaxAmount);
-        
+
         if (request.CategoryId is not null)
             predicate = predicate.And(product => product.CategoryId == request.CategoryId);
 
