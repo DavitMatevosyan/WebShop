@@ -4,7 +4,7 @@ using MediatR;
 namespace Catalog.Api.Endpoints.Category;
 
 
-public class GetCategoryEndpoint(Mediator mediator) : BaseEndpoint(mediator)
+public class GetCategoryEndpoint(IMediator mediator) : BaseEndpoint(mediator)
 {
     public async Task<IResult> HandleAsync(Guid id)
     {

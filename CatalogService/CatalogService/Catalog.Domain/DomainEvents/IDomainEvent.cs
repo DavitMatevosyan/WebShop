@@ -5,12 +5,17 @@ namespace Catalog.Domain.DomainEvents;
 
 public interface IDomainEvent : INotification;
 
+public record DomainEvent: IDomainEvent
+{
+    public string EventType => GetType().Name;
+}
+
 // Product Domain Events
-public record ProductNameChangedEvent(Guid Id, string Name) : IDomainEvent;
+public record ProductNameChangedEvent(Guid Id, string Name) : DomainEvent;
 public record ProductDescriptionChangedEvent(Guid Id, string Description) : IDomainEvent;
 public record ProductImageChangedEvent(Guid Id, string Image) : IDomainEvent;
 public record ProductCategoryIdChangedEvent(Guid Id, Guid CategoryId) : IDomainEvent;
-public record ProductPriceChangedEvent(Guid Id, Money Price) : IDomainEvent;
+public record ProductPriceChangedEvent(Guid Id, Money Price) : DomainEvent;
 public record ProductAmountChangedEvent(Guid Id, int Amount) : IDomainEvent;
 public record ProductDeletedEvent(Guid Id) : IDomainEvent;
 

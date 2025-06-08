@@ -1,15 +1,31 @@
 using CartService.Application.Entities;
 using CartService.Application.Repositories.Contracts;
 using LiteDB;
+using LiteDB.Engine;
 
 namespace CartService.Application.Repositories.Implementations;
 
 // connection string should be retrieved from appsettings/secrets/KeyVault
-public class BaseRepository<T>(string connectionString) : IBaseRepository<T> where T : BaseEntity
+public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
 {
+    private readonly string _connectionString;
+
+    public BaseRepository(string connectionString)
+    {
+        var liteEngine = new LiteEngine(new EngineSettings()
+        {
+            Filename = connectionString,
+        });
+        
+        _connectionString = connectionString;
+
+        // create new db if doesn't exist
+        var database = new LiteDatabase(liteEngine);
+    }
+
     public Task<List<T>> GetAsync(int id)
     {
-        using var dbConn = new LiteDatabase(connectionString);
+        using var dbConn = new LiteDatabase(_connectionString);
         
         var data = dbConn
             .GetCollection<T>()
@@ -22,7 +38,7 @@ public class BaseRepository<T>(string connectionString) : IBaseRepository<T> whe
 
     public Task AddAsync(T entity)
     {
-        using var dbConn = new LiteDatabase(connectionString);
+        using var dbConn = new LiteDatabase(_connectionString);
         
         dbConn.GetCollection<T>().Insert(entity);
         
@@ -31,7 +47,7 @@ public class BaseRepository<T>(string connectionString) : IBaseRepository<T> whe
 
     public Task RemoveAsync(int entityId)
     {
-        using var dbConn = new LiteDatabase(connectionString);
+        using var dbConn = new LiteDatabase(_connectionString);
         
         dbConn.GetCollection<T>().DeleteMany(x => x.Id == entityId);
         
