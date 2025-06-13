@@ -8,7 +8,7 @@ public class ProductRepository(ApplicationDbContext dbContext) : BaseRepository<
 {
     private readonly ApplicationDbContext _dbContext = dbContext;
 
-    public async Task<Product> GetProductWithCategoryAsync(Guid id)
+    public async Task<Product?> GetProductWithCategoryAsync(Guid id)
     {
         var product = await _dbContext.Products.Where(pr => pr.Id == id)
             .Include(pr => pr.Category)

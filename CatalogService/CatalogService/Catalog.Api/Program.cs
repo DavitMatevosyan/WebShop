@@ -62,11 +62,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("Authorized", policy =>
+builder.Services.AddAuthorizationBuilder()
+    .AddPolicy("Authorized", policy =>
         policy.RequireRole(UserRoles.Manager, UserRoles.StoreCustomer));
-});
 
 builder.Services.AddMediatR(config =>
 {
@@ -126,4 +124,4 @@ app.UseHttpsRedirection();
 app.MapGroup("/api/Categories").MapCategoriesEndpoints(builder.Configuration);
 app.MapGroup("/api/Products").MapProductsEndpoints(builder.Configuration);
 
-app.Run();
+await app.RunAsync();

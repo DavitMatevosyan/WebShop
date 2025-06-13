@@ -52,7 +52,7 @@ public static class EndpointConfigurations
         group.MapPut("/", async ([FromServices] UpdateProductEndpoint handler, [FromBody] UpdateProductDto dto) => await handler.HandleAsync(dto))
             .RequireAuthorization(policy => policy.RequireRole(UserRoles.Manager));
 
-        group.MapDelete("/{id:guid}", async ([FromServices] DeleteProductEndpoint handler, [FromQuery] Guid id) => await handler.HandleAsync(id))
+        group.MapDelete("/{id:guid}", async ([FromServices] DeleteProductEndpoint handler, [FromRoute] Guid id) => await handler.HandleAsync(id))
             .RequireAuthorization(policy => policy.RequireRole(UserRoles.Manager));
     }
 }

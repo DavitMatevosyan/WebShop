@@ -24,8 +24,6 @@ public class AddProductCommandHandler(IProductRepository productRepository, ICat
 
         var price = new Money(request.Price);
 
-        int x = 12;
-
         var product = new Product(
             request.Name,
             request.Description,
@@ -35,12 +33,8 @@ public class AddProductCommandHandler(IProductRepository productRepository, ICat
             request.Amount);
 
         await productRepository.AddAsync(product);
-
         await productRepository.SaveChangesAsync();
-        if (x == 10)
-        {
 
-        }
         return product.Id;
     }
 }
