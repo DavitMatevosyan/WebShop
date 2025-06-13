@@ -20,7 +20,7 @@ public class GetProductQueryTests
         _categoryRepositoryMock = new Mock<ICategoryRepository>();
         _handler = new GetProductQueryHandler(_productRepositoryMock.Object);
     }
-    
+
     [Fact]
     public async Task Handle_ProductExists_ShouldReturn()
     {

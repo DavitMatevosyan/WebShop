@@ -4,4 +4,4 @@ public record UpdateCategoryDto(
     Guid Id,
     string Name,
     string? Image,
-    Guid ParentCategoryId);
+    Guid? ParentCategoryId);

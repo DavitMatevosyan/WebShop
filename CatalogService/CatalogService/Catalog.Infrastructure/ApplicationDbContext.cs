@@ -5,10 +5,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Catalog.Infrastructure;
 
-public class ApplicationDbContext(IDomainEventDispatcher domainEventDispatcher) : DbContext
+public class ApplicationDbContext(DbContextOptions options, IDomainEventDispatcher domainEventDispatcher) : DbContext(options)
 {
     public DbSet<Product> Products { get; set; }
     public DbSet<Category> Categories { get; set; }
+
+    // ReSharper disable once RedundantOverriddenMember 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        base.OnConfiguring(optionsBuilder);
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -25,7 +31,7 @@ public class ApplicationDbContext(IDomainEventDispatcher domainEventDispatcher) 
             .ToList();
 
         await domainEventDispatcher.DispatchEventAsync(domainEntities);
-        
+
         return await base.SaveChangesAsync(cancellationToken);
     }
 }

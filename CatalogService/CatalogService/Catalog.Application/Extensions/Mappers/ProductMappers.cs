@@ -8,7 +8,7 @@ public static class ProductMappers
     public static ProductDto ToDto(this Product product)
     {
         var categoryDto = product.Category.ToDto();
-    
+
         var productDto = new ProductDto(
             product.Id,
             product.Name,

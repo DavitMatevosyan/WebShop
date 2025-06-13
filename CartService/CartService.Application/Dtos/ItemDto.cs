@@ -1,9 +1,4 @@
 namespace CartService.Application.Dtos;
 
-public class ItemDto
-{
-    public int Id { get; set; }
-    public required string Name { get; set; }
-    public string? Image { get; set; }
-    public decimal Money { get; set; }
-}
+public record ItemDto(Guid Id, string Name, string Image, decimal Money, int CartId);
+public record UpdateItemDefinitionDto(Guid Id, string? Name = null, string? Image = null, decimal? Money = null);

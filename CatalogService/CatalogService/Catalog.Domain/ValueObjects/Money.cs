@@ -5,7 +5,7 @@ namespace Catalog.Domain.ValueObjects;
 public class Money
 {
     public decimal Value { get; }
-    
+
     public Money(decimal value)
     {
         if (value < 0)

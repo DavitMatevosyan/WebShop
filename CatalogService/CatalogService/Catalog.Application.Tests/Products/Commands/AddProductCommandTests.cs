@@ -1,7 +1,7 @@
+using Catalog.Application.Exceptions;
 using Catalog.Application.Products.Commands;
 using Catalog.Domain.Contracts;
 using Catalog.Domain.Entities;
-using Catalog.Domain.Exceptions;
 using FluentAssertions;
 using Moq;
 
@@ -12,23 +12,23 @@ public class AddProductCommandTests
     private readonly Mock<IProductRepository> _productRepositoryMock;
     private readonly Mock<ICategoryRepository> _categoryRepositoryMock;
     private readonly AddProductCommandHandler _handler;
-    
+
     private readonly Guid existingCategoryId = Guid.NewGuid();
-    
+
     public AddProductCommandTests()
     {
         _productRepositoryMock = new Mock<IProductRepository>();
         _categoryRepositoryMock = new Mock<ICategoryRepository>();
         _handler = new AddProductCommandHandler(_productRepositoryMock.Object, _categoryRepositoryMock.Object);
     }
-    
+
     [Fact]
     public async Task Handle_WithValidProduct_ShouldAddProduct()
     {
         // Arrange
         _categoryRepositoryMock.Setup(repo => repo.GetAsync(existingCategoryId))
             .ReturnsAsync(new Category("Category", "Image uri", null));
-        
+
         var command = new AddProductCommand(
             Name: "Test Product",
             Description: "A test product",
@@ -52,14 +52,14 @@ public class AddProductCommandTests
             p.Amount == command.Amount
             )), Times.Once);
     }
-    
+
     [Fact]
     public async Task Handle_WithInValidCategory_ShouldAddProduct()
     {
         // Arrange
         _categoryRepositoryMock.Setup(repo => repo.GetAsync(existingCategoryId))
             .ReturnsAsync(new Category("Category", "Image uri", null));
-        
+
         var command = new AddProductCommand(
             Name: "Test Product",
             Description: "A test product",
@@ -70,7 +70,7 @@ public class AddProductCommandTests
             );
 
         // Act
-        var result = async () => await _handler.Handle(command, CancellationToken.None);
+        Func<Task<Guid>> result = async () => await _handler.Handle(command, CancellationToken.None);
 
         // Assert
         await result.Should().ThrowAsync<NotFoundException>();

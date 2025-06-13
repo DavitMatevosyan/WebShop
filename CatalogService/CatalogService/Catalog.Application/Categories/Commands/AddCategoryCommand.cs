@@ -1,6 +1,6 @@
+using Catalog.Application.Exceptions;
 using Catalog.Domain.Contracts;
 using Catalog.Domain.Entities;
-using Catalog.Domain.Exceptions;
 using MediatR;
 
 namespace Catalog.Application.Categories.Commands;
@@ -18,10 +18,12 @@ public class AddCategoryCommandHandler(ICategoryRepository repository) : IReques
             if (parentCategory == default)
                 throw new NotFoundException("Provided parent category does not exist");
         }
-        
+
         var category = new Category(request.Name, request.Image, request.ParentCategoryId);
 
         await repository.AddAsync(category);
+
+        await repository.SaveChangesAsync();
 
         return category.Id;
     }
