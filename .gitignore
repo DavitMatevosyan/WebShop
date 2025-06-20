@@ -3,3 +3,10 @@ obj/
 /packages/
 riderModule.iml
 /_ReSharper.Caches/
+/CatalogService/CatalogService/.vs/
+/CatalogService/CatalogService/Catalog.Api
+/CatalogService/CatalogService/Catalog.Api/Catalog.Api.csproj.user
+/CatalogService/CatalogService/.vs/CatalogService/FileContentIndex/c131c72d-bd62-4bea-8fb5-88120e2e067d.vsidx
+/CartService/.vs/CartService/DesignTimeBuild
+/CartService/.vs/CartService/FileContentIndex
+/CatalogService/.vs
