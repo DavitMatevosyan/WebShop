@@ -5,6 +5,32 @@ version: '3.8'
 # no manual creation of topics or exchanges (from code) will be done.
 
 services:
+  catalog-service:
+    build: ./CatalogService
+    ports: 
+      - 5149:5149
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - RABBITMQ_HOST=rabbitmq
+      - KEYCLOAK_URL=http://keycloak:8080
+    depends_on:
+      - rabbitmq
+      - keycloak
+
+  cart-service:
+    build: ./CatalogService
+    ports: 
+      - 5150:5150
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - RABBITMQ_HOST=rabbitmq
+      - KEYCLOAK_URL=http://keycloak:8080
+    depends_on:
+      - rabbitmq
+      - keycloak
+      
+
+
   rabbitmq:
     image: rabbitmq:4-management
     container_name: rabbitmq
@@ -15,3 +41,12 @@ services:
       RABBITMQ_DEFAULT_USER: davit
       RABBITMQ_DEFAULT_PASS: davit
     hostname: rabbit
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0.3
+    command: start-dev
+    ports:
+      - "8080:8080"
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
