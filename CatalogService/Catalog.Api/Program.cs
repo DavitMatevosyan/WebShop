@@ -25,18 +25,19 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGenWithAuthorization(builder.Configuration);
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         options.Authority = builder.Configuration["Authorization:Authority"];
         options.Audience = builder.Configuration["Authorization:Audience"];
+        options.ClaimsIssuer = builder.Configuration["Authorization:Issuer"];
         options.RequireHttpsMetadata = false;
 
         options.TokenValidationParameters = new TokenValidationParameters
         {
-            ValidateIssuerSigningKey = true
+            ValidateIssuer = false
         };
 
         options.Events = new JwtBearerEvents
@@ -106,8 +107,8 @@ builder.Services.AddSingleton<INotificationPublisher>(sp => sp.GetRequiredServic
 
 var app = builder.Build();
 
-var rabbitMq = new RabbitMqInitializer(app.Services.GetRequiredService<RabbitMqService>());
-await rabbitMq.StartAsync(CancellationToken.None);
+// var rabbitMq = new RabbitMqInitializer(app.Services.GetRequiredService<RabbitMqService>());
+// await rabbitMq.StartAsync(CancellationToken.None);
 
 app.UseAuthentication();
 app.UseAuthorization();

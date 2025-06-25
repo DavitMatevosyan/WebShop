@@ -21,8 +21,8 @@ public class RabbitMqService : INotificationPublisher, IAsyncDisposable
         {
             HostName = options.Hostname,
             Port = options.Port,
-            UserName = "davo", // get from configs
-            Password = "password"
+            UserName = options.Username,
+            Password = options.Password
         };
     }
 
