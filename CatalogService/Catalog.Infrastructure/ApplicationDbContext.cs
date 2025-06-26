@@ -1,0 +1,37 @@
+using Catalog.Application.Interfaces;
+using Catalog.Domain.Entities;
+using Catalog.Infrastructure.EntityConfigurations;
+using Microsoft.EntityFrameworkCore;
+
+namespace Catalog.Infrastructure;
+
+public class ApplicationDbContext(DbContextOptions options, IDomainEventDispatcher domainEventDispatcher) : DbContext(options)
+{
+    public DbSet<Product> Products { get; set; }
+    public DbSet<Category> Categories { get; set; }
+
+    // ReSharper disable once RedundantOverriddenMember 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        base.OnConfiguring(optionsBuilder);
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.ApplyConfiguration(new ProductEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new CategoryEntityTypeConfiguration());
+    }
+
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        var domainEntities = ChangeTracker
+            .Entries<AggregateRoot>()
+            .Where(x => x.Entity.DomainEvents.Any())
+            .Select(x => x.Entity)
+            .ToList();
+
+        await domainEventDispatcher.DispatchEventAsync(domainEntities);
+
+        return await base.SaveChangesAsync(cancellationToken);
+    }
+}
