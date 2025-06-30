@@ -1,4 +1,4 @@
-using CartService.Application.Entities;
+using CartService.Entities;
 
 namespace CartService.Application.Tests;
 
